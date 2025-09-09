@@ -1,0 +1,329 @@
+<!-- Professional Template -->
+<div
+  class="resume-template template1"
+  style="
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: 'Times New Roman', serif;
+    color: #333;
+    line-height: 1.6;
+  "
+>
+  <!-- Header -->
+  <div
+    class="resume-header text-center mb-4"
+    style="border-bottom: 3px solid #2c3e50; padding-bottom: 20px"
+  >
+    <h1
+      style="
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        color: #2c3e50;
+        font-weight: bold;
+      "
+    >
+      {{ resume.full_name }}
+    </h1>
+
+    <div class="contact-info" style="font-size: 1rem; color: #666">
+      {% if resume.email %}
+      <span>{{ resume.email }}</span>
+      {% endif %} {% if resume.phone %}
+      <span style="margin-left: 20px">{{ resume.phone }}</span>
+      {% endif %} {% if resume.address %}
+      <span style="margin-left: 20px">{{ resume.address }}</span>
+      {% endif %}
+    </div>
+
+    {% if resume.linkedin or resume.github or resume.website %}
+    <div class="links mt-2" style="font-size: 0.9rem">
+      {% if resume.linkedin %}
+      <a
+        href="{{ resume.linkedin }}"
+        style="color: #2c3e50; text-decoration: none; margin-right: 15px"
+        >LinkedIn</a
+      >
+      {% endif %} {% if resume.github %}
+      <a
+        href="{{ resume.github }}"
+        style="color: #2c3e50; text-decoration: none; margin-right: 15px"
+        >GitHub</a
+      >
+      {% endif %} {% if resume.website %}
+      <a
+        href="{{ resume.website }}"
+        style="color: #2c3e50; text-decoration: none"
+        >Website</a
+      >
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Professional Summary -->
+  {% if resume.summary %}
+  <div class="section mb-4">
+    <h2
+      style="
+        color: #2c3e50;
+        border-bottom: 2px solid #2c3e50;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+      "
+    >
+      PROFESSIONAL SUMMARY
+    </h2>
+    <p style="text-align: justify; margin: 0">{{ resume.summary }}</p>
+  </div>
+  {% endif %}
+
+  <!-- Experience -->
+  {% if resume.experience %}
+  <div class="section mb-4">
+    <h2
+      style="
+        color: #2c3e50;
+        border-bottom: 2px solid #2c3e50;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+      "
+    >
+      PROFESSIONAL EXPERIENCE
+    </h2>
+    {% for exp in resume.experience %}
+    <div class="experience-item mb-3">
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: start;
+          margin-bottom: 5px;
+        "
+      >
+        <div>
+          <h3
+            style="
+              margin: 0;
+              font-size: 1.2rem;
+              color: #2c3e50;
+              font-weight: bold;
+            "
+          >
+            {{ exp.position }}
+          </h3>
+          <h4
+            style="
+              margin: 0;
+              font-size: 1.1rem;
+              color: #666;
+              font-style: italic;
+            "
+          >
+            {{ exp.company }}
+          </h4>
+        </div>
+        {% if exp.duration %}
+        <div style="text-align: right; color: #666; font-weight: bold">
+          {{ exp.duration }}
+        </div>
+        {% endif %}
+      </div>
+      {% if exp.description %}
+      <p style="margin: 10px 0 0 0; text-align: justify">
+        {{ exp.description }}
+      </p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Education -->
+  {% if resume.education %}
+  <div class="section mb-4">
+    <h2
+      style="
+        color: #2c3e50;
+        border-bottom: 2px solid #2c3e50;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+      "
+    >
+      EDUCATION
+    </h2>
+    {% for edu in resume.education %}
+    <div class="education-item mb-3">
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: start;
+        "
+      >
+        <div>
+          <h3
+            style="
+              margin: 0;
+              font-size: 1.1rem;
+              color: #2c3e50;
+              font-weight: bold;
+            "
+          >
+            {{ edu.degree }}
+          </h3>
+          <h4
+            style="margin: 0; font-size: 1rem; color: #666; font-style: italic"
+          >
+            {{ edu.institution }}
+          </h4>
+          {% if edu.gpa %}
+          <p style="margin: 5px 0 0 0; color: #666; font-size: 0.9rem">
+            GPA: {{ edu.gpa }}
+          </p>
+          {% endif %}
+        </div>
+        {% if edu.year %}
+        <div style="color: #666; font-weight: bold">{{ edu.year }}</div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Skills -->
+  {% if resume.skills %}
+  <div class="section mb-4">
+    <h2
+      style="
+        color: #2c3e50;
+        border-bottom: 2px solid #2c3e50;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+      "
+    >
+      TECHNICAL SKILLS
+    </h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px">
+      {% for skill in resume.skills %}
+      <span
+        style="
+          background-color: #f8f9fa;
+          border: 1px solid #dee2e6;
+          padding: 5px 10px;
+          border-radius: 3px;
+          font-size: 0.9rem;
+        "
+        >{{ skill }}</span
+      >
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Projects -->
+  {% if resume.projects %}
+  <div class="section mb-4">
+    <h2
+      style="
+        color: #2c3e50;
+        border-bottom: 2px solid #2c3e50;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+      "
+    >
+      PROJECTS
+    </h2>
+    {% for project in resume.projects %}
+    <div class="project-item mb-3">
+      <h3
+        style="
+          margin: 0 0 5px 0;
+          font-size: 1.1rem;
+          color: #2c3e50;
+          font-weight: bold;
+        "
+      >
+        {{ project.name }} {% if project.url %}
+        <a
+          href="{{ project.url }}"
+          style="
+            font-size: 0.9rem;
+            color: #666;
+            text-decoration: none;
+            margin-left: 10px;
+          "
+          >[Link]</a
+        >
+        {% endif %}
+      </h3>
+      {% if project.technologies %}
+      <p
+        style="
+          margin: 0 0 5px 0;
+          color: #666;
+          font-style: italic;
+          font-size: 0.9rem;
+        "
+      >
+        Technologies: {{ project.technologies }}
+      </p>
+      {% endif %} {% if project.description %}
+      <p style="margin: 5px 0 0 0; text-align: justify">
+        {{ project.description }}
+      </p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Certifications -->
+  {% if resume.certifications %}
+  <div class="section mb-4">
+    <h2
+      style="
+        color: #2c3e50;
+        border-bottom: 2px solid #2c3e50;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+      "
+    >
+      CERTIFICATIONS
+    </h2>
+    <ul style="margin: 0; padding-left: 20px">
+      {% for cert in resume.certifications %}
+      <li style="margin-bottom: 5px">{{ cert }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- Languages -->
+  {% if resume.languages %}
+  <div class="section mb-4">
+    <h2
+      style="
+        color: #2c3e50;
+        border-bottom: 2px solid #2c3e50;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+      "
+    >
+      LANGUAGES
+    </h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 15px">
+      {% for lang in resume.languages %}
+      <span style="color: #666">{{ lang }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>

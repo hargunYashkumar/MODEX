@@ -1,0 +1,951 @@
+{% extends "base.html" %} {% block title %}Upload Resume - AI Resume Enhancer{%
+endblock %} {% block content %}
+<div class="upload-container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="upload-card card shadow-lg border-0">
+        <div class="card-header text-white p-4">
+          <div class="d-flex align-items-center">
+            <div class="header-icon me-3">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div>
+              <h2 class="mb-1 fw-bold">Upload & Enhance Your Resume</h2>
+              <p class="mb-0 opacity-90">
+                Transform your existing resume with AI-powered enhancements
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body p-5">
+          <form
+            method="POST"
+            action="{{ url_for('main.process_upload') }}"
+            enctype="multipart/form-data"
+            id="uploadForm"
+            class="needs-validation"
+            novalidate
+          >
+            <!-- Enhanced File Upload Section -->
+            <div class="upload-section mb-5">
+              <label for="resume_file" class="form-label fs-5 fw-semibold mb-3">
+                <i class="fas fa-file-upload me-2 text-primary"></i>
+                Select Your Resume File
+                <span class="text-danger">*</span>
+              </label>
+
+              <div class="upload-zone" id="uploadArea">
+                <div class="upload-content text-center">
+                  <div class="upload-icon mb-3">
+                    <i
+                      class="fas fa-cloud-upload-alt fa-4x text-primary opacity-75"
+                    ></i>
+                  </div>
+                  <h4 class="upload-title mb-3">
+                    Drag & Drop Your Resume Here
+                  </h4>
+                  <p class="upload-subtitle text-muted mb-4">
+                    or click to browse your files
+                  </p>
+
+                  <input
+                    type="file"
+                    class="file-input d-none"
+                    id="resume_file"
+                    name="resume_file"
+                    accept=".pdf,.docx,.doc,.txt"
+                    required
+                  />
+
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-lg px-4 py-2"
+                    onclick="document.getElementById('resume_file').click()"
+                  >
+                    <i class="fas fa-folder-open me-2"></i>Browse Files
+                  </button>
+
+                  <div class="upload-formats mt-4">
+                    <small class="text-muted">
+                      <i class="fas fa-info-circle me-1"></i>
+                      Supported formats: PDF, DOCX, DOC, TXT • Max size: 16MB
+                    </small>
+                  </div>
+                </div>
+
+                <!-- File Info Display -->
+                <div class="file-info d-none" id="fileInfo">
+                  <div class="file-preview d-flex align-items-center p-3">
+                    <div class="file-icon me-3">
+                      <i class="fas fa-file-alt fa-2x text-success"></i>
+                    </div>
+                    <div class="file-details flex-grow-1">
+                      <div class="file-name fw-semibold" id="fileName"></div>
+                      <div
+                        class="file-size text-muted small"
+                        id="fileSize"
+                      ></div>
+                      <div class="file-status">
+                        <div class="progress mt-2 d-none" id="fileProgress">
+                          <div
+                            class="progress-bar bg-success"
+                            role="progressbar"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger btn-sm"
+                      onclick="clearFile()"
+                      aria-label="Remove file"
+                    >
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Enhanced Template Selection -->
+            <div class="template-section mb-5">
+              <h5 class="section-title mb-4">
+                <i class="fas fa-palette me-2 text-primary"></i>
+                Choose Your Desired Output Template
+              </h5>
+
+              <div class="template-carousel">
+                <div class="row g-4">
+                  <div class="col-lg-4">
+                    <div class="template-card">
+                      <input
+                        class="template-radio d-none"
+                        type="radio"
+                        name="template_id"
+                        value="template1"
+                        id="upload_template1"
+                        checked
+                      />
+                      <label for="upload_template1" class="template-label">
+                        <div class="template-preview-enhanced">
+                          <div class="template-image">
+                            <div class="template-mockup professional-mockup">
+                              <div class="mockup-header bg-primary"></div>
+                              <div class="mockup-content">
+                                <div class="mockup-line"></div>
+                                <div class="mockup-line short"></div>
+                                <div class="mockup-line medium"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="template-info p-3">
+                            <h6 class="template-name mb-2">
+                              Professional Template
+                            </h6>
+                            <p
+                              class="template-description small text-muted mb-0"
+                            >
+                              Clean, traditional layout perfect for corporate
+                              environments
+                            </p>
+                            <div class="template-features mt-2">
+                              <span class="feature-tag">ATS-Friendly</span>
+                              <span class="feature-tag">Corporate</span>
+                            </div>
+                          </div>
+                          <div class="template-selection-indicator">
+                            <i class="fas fa-check-circle"></i>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-4">
+                    <div class="template-card">
+                      <input
+                        class="template-radio d-none"
+                        type="radio"
+                        name="template_id"
+                        value="template2"
+                        id="upload_template2"
+                      />
+                      <label for="upload_template2" class="template-label">
+                        <div class="template-preview-enhanced">
+                          <div class="template-image">
+                            <div class="template-mockup modern-mockup">
+                              <div class="mockup-header bg-info"></div>
+                              <div class="mockup-content">
+                                <div class="mockup-line"></div>
+                                <div class="mockup-line medium"></div>
+                                <div class="mockup-line long"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="template-info p-3">
+                            <h6 class="template-name mb-2">Modern Template</h6>
+                            <p
+                              class="template-description small text-muted mb-0"
+                            >
+                              Contemporary design with modern styling elements
+                            </p>
+                            <div class="template-features mt-2">
+                              <span class="feature-tag">Tech-Friendly</span>
+                              <span class="feature-tag">Minimalist</span>
+                            </div>
+                          </div>
+                          <div class="template-selection-indicator">
+                            <i class="fas fa-check-circle"></i>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-4">
+                    <div class="template-card">
+                      <input
+                        class="template-radio d-none"
+                        type="radio"
+                        name="template_id"
+                        value="template3"
+                        id="upload_template3"
+                      />
+                      <label for="upload_template3" class="template-label">
+                        <div class="template-preview-enhanced">
+                          <div class="template-image">
+                            <div class="template-mockup creative-mockup">
+                              <div class="mockup-header bg-warning"></div>
+                              <div class="mockup-content">
+                                <div class="mockup-line"></div>
+                                <div class="mockup-line long"></div>
+                                <div class="mockup-line short"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="template-info p-3">
+                            <h6 class="template-name mb-2">
+                              Creative Template
+                            </h6>
+                            <p
+                              class="template-description small text-muted mb-0"
+                            >
+                              Eye-catching design for creative professionals
+                            </p>
+                            <div class="template-features mt-2">
+                              <span class="feature-tag">Creative</span>
+                              <span class="feature-tag">Bold</span>
+                            </div>
+                          </div>
+                          <div class="template-selection-indicator">
+                            <i class="fas fa-check-circle"></i>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Processing Options -->
+            <div class="options-section mb-5">
+              <h5 class="section-title mb-4">
+                <i class="fas fa-cogs me-2 text-primary"></i>
+                AI Enhancement Options
+              </h5>
+
+              <div class="options-grid">
+                <div class="option-item glass p-4 mb-3">
+                  <div class="option-header d-flex align-items-center mb-2">
+                    <div class="option-icon me-3">
+                      <i class="fas fa-magic text-primary"></i>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="enhance_content"
+                        name="enhance_content"
+                        checked
+                      />
+                      <label
+                        class="form-check-label fw-semibold"
+                        for="enhance_content"
+                      >
+                        AI Content Enhancement
+                      </label>
+                    </div>
+                  </div>
+                  <p class="option-description text-muted mb-0 ms-5">
+                    Improve your resume content with AI-powered suggestions for
+                    better impact and clarity
+                  </p>
+                </div>
+
+                <div class="option-item glass p-4 mb-3">
+                  <div class="option-header d-flex align-items-center mb-2">
+                    <div class="option-icon me-3">
+                      <i class="fas fa-align-left text-success"></i>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="fix_formatting"
+                        name="fix_formatting"
+                        checked
+                      />
+                      <label
+                        class="form-check-label fw-semibold"
+                        for="fix_formatting"
+                      >
+                        Smart Formatting Fixes
+                      </label>
+                    </div>
+                  </div>
+                  <p class="option-description text-muted mb-0 ms-5">
+                    Automatically fix formatting inconsistencies and optimize
+                    layout for better readability
+                  </p>
+                </div>
+
+                <div class="option-item glass p-4 mb-3">
+                  <div class="option-header d-flex align-items-center mb-2">
+                    <div class="option-icon me-3">
+                      <i class="fas fa-search text-info"></i>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="ats_optimization"
+                        name="ats_optimization"
+                        checked
+                      />
+                      <label
+                        class="form-check-label fw-semibold"
+                        for="ats_optimization"
+                      >
+                        ATS Optimization
+                      </label>
+                    </div>
+                  </div>
+                  <p class="option-description text-muted mb-0 ms-5">
+                    Optimize your resume for Applicant Tracking Systems to
+                    improve visibility to recruiters
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upload Progress -->
+            <div class="upload-progress-section d-none" id="uploadProgress">
+              <div class="progress-container glass p-4 mb-4">
+                <div class="progress-header d-flex align-items-center mb-3">
+                  <div class="progress-icon me-3">
+                    <i class="fas fa-cog fa-spin text-primary"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1">Processing Your Resume</h6>
+                    <p class="text-muted small mb-0">
+                      Please wait while we enhance your resume...
+                    </p>
+                  </div>
+                </div>
+                <div class="progress mb-2">
+                  <div
+                    class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar"
+                    style="width: 0%"
+                    id="progressBar"
+                  ></div>
+                </div>
+                <div class="progress-steps d-flex justify-content-between">
+                  <small class="progress-step">Uploading</small>
+                  <small class="progress-step">Extracting</small>
+                  <small class="progress-step">Enhancing</small>
+                  <small class="progress-step">Generating</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Section -->
+            <div class="submit-section text-center">
+              <button
+                type="submit"
+                class="btn btn-success btn-xl px-5 py-3"
+                id="submitBtn"
+              >
+                <i class="fas fa-rocket me-2"></i>
+                <span class="btn-text">Transform My Resume</span>
+              </button>
+
+              <div class="submit-info mt-3">
+                <small class="text-muted">
+                  <i class="fas fa-shield-alt me-1 text-success"></i>
+                  Your file is secure and will be processed privately
+                </small>
+              </div>
+            </div>
+          </form>
+
+          <!-- Help Section -->
+          <div class="help-section mt-5 p-4 bg-light rounded-3">
+            <div class="help-header d-flex align-items-center mb-3">
+              <i class="fas fa-lightbulb text-warning me-2 fs-4"></i>
+              <h6 class="mb-0 fw-bold">Tips for Better Results</h6>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="tip-item d-flex align-items-start">
+                  <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                  <small
+                    >Use clear, readable fonts in your original resume</small
+                  >
+                </div>
+                <div class="tip-item d-flex align-items-start">
+                  <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                  <small
+                    >Include proper section headings (Experience, Education,
+                    Skills)</small
+                  >
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="tip-item d-flex align-items-start">
+                  <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                  <small
+                    >PDF files provide better text extraction than Word
+                    documents</small
+                  >
+                </div>
+                <div class="tip-item d-flex align-items-start">
+                  <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                  <small>Ensure contact information is clearly visible</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Enhanced CSS -->
+<style>
+  .upload-container {
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .upload-card {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, #48bb78, #38a169) !important;
+  }
+
+  .header-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+
+  .upload-zone {
+    border: 3px dashed #dee2e6;
+    border-radius: 16px;
+    background: linear-gradient(
+      135deg,
+      rgba(72, 187, 120, 0.05),
+      rgba(56, 161, 105, 0.02)
+    );
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .upload-zone::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .upload-zone:hover {
+    border-color: #48bb78;
+    background: rgba(72, 187, 120, 0.1);
+    transform: scale(1.01);
+  }
+
+  .upload-zone:hover::before {
+    opacity: 0.05;
+  }
+
+  .upload-zone.dragover {
+    border-color: #48bb78;
+    background: rgba(72, 187, 120, 0.15);
+    transform: scale(1.02);
+  }
+
+  .upload-zone.dragover::before {
+    opacity: 0.1;
+  }
+
+  .upload-content {
+    padding: 3rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .upload-icon {
+    transition: all 0.3s ease;
+  }
+
+  .upload-zone:hover .upload-icon i {
+    color: #48bb78 !important;
+    transform: translateY(-5px) scale(1.1);
+  }
+
+  .file-info {
+    background: rgba(72, 187, 120, 0.1);
+    border: 2px solid #48bb78;
+    border-radius: 12px;
+    padding: 0;
+    margin-top: 1rem;
+  }
+
+  .file-preview {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid rgba(72, 187, 120, 0.2);
+  }
+
+  .template-carousel .template-card {
+    transition: all 0.3s ease;
+  }
+
+  .template-preview-enhanced {
+    border: 3px solid #e9ecef;
+    border-radius: 16px;
+    background: white;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .template-preview-enhanced:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    border-color: #667eea;
+  }
+
+  .template-radio:checked + .template-label .template-preview-enhanced {
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+    background: rgba(102, 126, 234, 0.02);
+  }
+
+  .template-image {
+    height: 120px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .template-mockup {
+    width: 80px;
+    height: 100px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+
+  .mockup-header {
+    height: 20px;
+    width: 100%;
+  }
+
+  .mockup-content {
+    padding: 8px;
+  }
+
+  .mockup-line {
+    height: 3px;
+    background: #dee2e6;
+    border-radius: 2px;
+    margin-bottom: 4px;
+  }
+
+  .mockup-line.short {
+    width: 60%;
+  }
+  .mockup-line.medium {
+    width: 80%;
+  }
+  .mockup-line.long {
+    width: 90%;
+  }
+
+  .template-selection-indicator {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    background: #48bb78;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 1rem;
+  }
+
+  .template-radio:checked + .template-label .template-selection-indicator {
+    opacity: 1;
+  }
+
+  .feature-tag {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    margin-right: 0.5rem;
+    font-weight: 500;
+  }
+
+  .section-title {
+    font-weight: 700;
+    color: #2d3748;
+  }
+
+  .options-grid .option-item {
+    border: 2px solid rgba(102, 126, 234, 0.1);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .options-grid .option-item:hover {
+    border-color: rgba(102, 126, 234, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .option-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+  }
+
+  .form-check-input:checked {
+    background-color: #48bb78;
+    border-color: #48bb78;
+  }
+
+  .form-check-input:focus {
+    border-color: #48bb78;
+    box-shadow: 0 0 0 0.25rem rgba(72, 187, 120, 0.25);
+  }
+
+  .btn-xl {
+    font-size: 1.25rem;
+    font-weight: 600;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-xl::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    transition: left 0.6s;
+  }
+
+  .btn-xl:hover::before {
+    left: 100%;
+  }
+
+  .progress-container {
+    border: 2px solid rgba(72, 187, 120, 0.2);
+    border-radius: 12px;
+  }
+
+  .progress-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(72, 187, 120, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .progress {
+    height: 12px;
+    border-radius: 8px;
+    background: rgba(72, 187, 120, 0.1);
+  }
+
+  .progress-bar {
+    background: linear-gradient(90deg, #48bb78, #38a169);
+    border-radius: 8px;
+  }
+
+  .progress-steps {
+    font-size: 0.8rem;
+    color: #6c757d;
+  }
+
+  .help-section {
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.05),
+      rgba(72, 187, 120, 0.02)
+    ) !important;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+  }
+
+  .tip-item {
+    margin-bottom: 0.75rem;
+  }
+
+  .tip-item:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    .upload-content {
+      padding: 2rem 1rem;
+    }
+
+    .template-carousel .col-lg-4 {
+      margin-bottom: 1rem;
+    }
+
+    .btn-xl {
+      font-size: 1.1rem;
+      padding: 1rem 2rem;
+    }
+  }
+</style>
+{% endblock %} {% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.getElementById("resume_file");
+    const uploadArea = document.getElementById("uploadArea");
+    const fileInfo = document.getElementById("fileInfo");
+    const uploadForm = document.getElementById("uploadForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    // Enhanced drag and drop functionality
+    uploadArea.addEventListener("dragover", function (e) {
+      e.preventDefault();
+      uploadArea.classList.add("dragover");
+    });
+
+    uploadArea.addEventListener("dragleave", function (e) {
+      e.preventDefault();
+      if (!uploadArea.contains(e.relatedTarget)) {
+        uploadArea.classList.remove("dragover");
+      }
+    });
+
+    uploadArea.addEventListener("drop", function (e) {
+      e.preventDefault();
+      uploadArea.classList.remove("dragover");
+
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        const file = files[0];
+        if (validateFile(file)) {
+          fileInput.files = files;
+          displayFileInfo(file);
+        }
+      }
+    });
+
+    // File input change handler
+    fileInput.addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (file && validateFile(file)) {
+        displayFileInfo(file);
+      }
+    });
+
+    // Enhanced form submission
+    uploadForm.addEventListener("submit", function (e) {
+      if (!fileInput.files || fileInput.files.length === 0) {
+        e.preventDefault();
+        showToast("Please select a resume file to upload.", "warning");
+        return;
+      }
+
+      // Show upload progress
+      showUploadProgress();
+
+      // Disable submit button
+      submitBtn.disabled = true;
+      submitBtn.innerHTML =
+        '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+
+      // Simulate progress animation
+      simulateProgress();
+    });
+
+    function validateFile(file) {
+      const allowedTypes = [
+        "application/pdf",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/msword",
+        "text/plain",
+      ];
+      const maxSize = 16 * 1024 * 1024; // 16MB
+
+      if (!allowedTypes.includes(file.type)) {
+        showToast(
+          "Please select a valid file type (PDF, DOCX, DOC, or TXT)",
+          "error"
+        );
+        clearFile();
+        return false;
+      }
+
+      if (file.size > maxSize) {
+        showToast("File size must be less than 16MB", "error");
+        clearFile();
+        return false;
+      }
+
+      return true;
+    }
+
+    function displayFileInfo(file) {
+      const fileName = document.getElementById("fileName");
+      const fileSize = document.getElementById("fileSize");
+      const fileIcon = fileInfo.querySelector(".file-icon i");
+
+      fileName.textContent = file.name;
+      fileSize.textContent = formatFileSize(file.size);
+
+      // Set appropriate icon based on file type
+      if (file.type.includes("pdf")) {
+        fileIcon.className = "fas fa-file-pdf fa-2x text-danger";
+      } else if (file.type.includes("word") || file.type.includes("document")) {
+        fileIcon.className = "fas fa-file-word fa-2x text-primary";
+      } else {
+        fileIcon.className = "fas fa-file-alt fa-2x text-info";
+      }
+
+      // Hide upload area and show file info
+      uploadArea.querySelector(".upload-content").style.display = "none";
+      fileInfo.classList.remove("d-none");
+    }
+
+    function clearFile() {
+      fileInput.value = "";
+      fileInfo.classList.add("d-none");
+      uploadArea.querySelector(".upload-content").style.display = "block";
+      uploadArea.classList.remove("dragover");
+    }
+
+    function showUploadProgress() {
+      document.getElementById("uploadProgress").classList.remove("d-none");
+    }
+
+    function simulateProgress() {
+      const progressBar = document.getElementById("progressBar");
+      const steps = ["Uploading", "Extracting", "Enhancing", "Generating"];
+      let progress = 0;
+      let stepIndex = 0;
+
+      const interval = setInterval(() => {
+        progress += Math.random() * 15;
+
+        if (progress > 100) {
+          progress = 100;
+          clearInterval(interval);
+        }
+
+        progressBar.style.width = progress + "%";
+
+        // Update step indicator
+        const currentStep = Math.floor((progress / 100) * steps.length);
+        if (currentStep > stepIndex && currentStep < steps.length) {
+          stepIndex = currentStep;
+          const stepElements = document.querySelectorAll(".progress-step");
+          stepElements.forEach((step, index) => {
+            if (index <= stepIndex) {
+              step.style.color = "#48bb78";
+              step.style.fontWeight = "600";
+            }
+          });
+        }
+      }, 500);
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return "0 Bytes";
+      const k = 1024;
+      const sizes = ["Bytes", "KB", "MB", "GB"];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    }
+
+    // Template selection enhancement
+    const templateRadios = document.querySelectorAll(".template-radio");
+    templateRadios.forEach((radio) => {
+      radio.addEventListener("change", function () {
+        // Add selection animation
+        const preview = this.parentNode.querySelector(
+          ".template-preview-enhanced"
+        );
+        if (preview) {
+          preview.style.transform = "scale(0.95)";
+          setTimeout(() => {
+            preview.style.transform = "scale(1)";
+          }, 150);
+        }
+      });
+    });
+
+    // Global clearFile function
+    window.clearFile = clearFile;
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,908 @@
+{% extends "base.html" %} {% block title %}My Resumes - Resume Dashboard{%
+endblock %} {% block content %}
+<div class="dashboard-container">
+  <!-- Dashboard Header -->
+  <div class="dashboard-header mb-5">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <div class="header-content">
+          <h1 class="display-5 fw-bold gradient-text mb-2">
+            <i class="fas fa-briefcase me-3"></i>My Resume Dashboard
+          </h1>
+          <p class="lead text-muted mb-0">
+            Manage and organize your professional resumes
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4 text-md-end">
+        <div
+          class="action-buttons d-flex flex-wrap gap-2 justify-content-md-end"
+        >
+          <a
+            href="{{ url_for('main.raw_data_form') }}"
+            class="btn btn-primary btn-lg shadow-hover"
+          >
+            <i class="fas fa-plus me-2"></i>Create New
+          </a>
+          <a
+            href="{{ url_for('main.upload_form') }}"
+            class="btn btn-success btn-lg shadow-hover"
+          >
+            <i class="fas fa-upload me-2"></i>Upload Resume
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Overview -->
+  <div class="stats-overview mb-5">
+    <div class="row g-4">
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card glass p-4 text-center">
+          <div class="stat-icon mb-3">
+            <i class="fas fa-file-alt text-primary"></i>
+          </div>
+          <div class="stat-value gradient-text fw-bold">
+            {{ resumes|length }}
+          </div>
+          <div class="stat-label text-muted">Total Resumes</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card glass p-4 text-center">
+          <div class="stat-icon mb-3">
+            <i class="fas fa-calendar text-success"></i>
+          </div>
+          <div class="stat-value gradient-text fw-bold">
+            {% if resumes %} {{ resumes|selectattr("created_at")|list|length }}
+            {% else %} 0 {% endif %}
+          </div>
+          <div class="stat-label text-muted">This Month</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card glass p-4 text-center">
+          <div class="stat-icon mb-3">
+            <i class="fas fa-eye text-info"></i>
+          </div>
+          <div class="stat-value gradient-text fw-bold">
+            {% set views = resumes|sum(attribute='views', start=0) %} {{ views
+            if views else '0' }}
+          </div>
+          <div class="stat-label text-muted">Total Views</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card glass p-4 text-center">
+          <div class="stat-icon mb-3">
+            <i class="fas fa-download text-warning"></i>
+          </div>
+          <div class="stat-value gradient-text fw-bold">
+            {% set downloads = resumes|sum(attribute='downloads', start=0) %} {{
+            downloads if downloads else '0' }}
+          </div>
+          <div class="stat-label text-muted">Downloads</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="filters-section mb-4">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <div class="search-container">
+          <div class="input-with-icon">
+            <i class="fas fa-search input-icon"></i>
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              id="resumeSearch"
+              placeholder="Search resumes by name, template, or content..."
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="filter-controls d-flex gap-2 justify-content-md-end">
+          <select class="form-select" id="templateFilter">
+            <option value="">All Templates</option>
+            <option value="template1">Professional</option>
+            <option value="template2">Modern</option>
+            <option value="template3">Creative</option>
+          </select>
+          <select class="form-select" id="sortFilter">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="name">Name A-Z</option>
+            <option value="updated">Recently Updated</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resume Grid -->
+  <div class="resumes-section">
+    {% if resumes %}
+    <div class="resumes-grid" id="resumesGrid">
+      {% for resume in resumes %}
+      <div
+        class="resume-card-container"
+        data-template="{{ resume.template_id }}"
+        data-name="{{ resume.full_name|lower }}"
+        data-created="{{ resume.created_at.isoformat() }}"
+      >
+        <div class="resume-card glass shadow-hover">
+          <!-- Card Header -->
+          <div class="card-header-custom">
+            <div class="resume-preview-thumb">
+              <div class="thumb-content {{ resume.template_id }}">
+                <div class="thumb-header"></div>
+                <div class="thumb-lines">
+                  <div class="thumb-line"></div>
+                  <div class="thumb-line short"></div>
+                  <div class="thumb-line medium"></div>
+                </div>
+              </div>
+            </div>
+            <div class="resume-status">
+              <span
+                class="status-badge badge bg-{{ 'success' if resume.is_complete else 'warning' }}"
+              >
+                {{ 'Complete' if resume.is_complete else 'Draft' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Card Body -->
+          <div class="card-body-custom p-4">
+            <div class="resume-info mb-3">
+              <h5 class="resume-title fw-bold mb-1">{{ resume.full_name }}</h5>
+              <p class="resume-template text-muted mb-2">
+                <i class="fas fa-palette me-1"></i>{{ resume.template_id|title
+                }} Template
+              </p>
+            </div>
+
+            <div class="resume-meta mb-3">
+              <div class="meta-row d-flex justify-content-between mb-2">
+                <small class="text-muted">
+                  <i class="fas fa-calendar-plus me-1"></i>Created
+                </small>
+                <small class="fw-semibold"
+                  >{{ resume.created_at.strftime('%b %d, %Y') }}</small
+                >
+              </div>
+              <div class="meta-row d-flex justify-content-between">
+                <small class="text-muted">
+                  <i class="fas fa-edit me-1"></i>Updated
+                </small>
+                <small class="fw-semibold"
+                  >{{ resume.updated_at.strftime('%b %d, %Y') }}</small
+                >
+              </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="resume-contacts mb-3">
+              {% if resume.email %}
+              <div class="contact-item d-flex align-items-center mb-1">
+                <i class="fas fa-envelope text-muted me-2"></i>
+                <small class="text-truncate">{{ resume.email }}</small>
+              </div>
+              {% endif %} {% if resume.phone %}
+              <div class="contact-item d-flex align-items-center">
+                <i class="fas fa-phone text-muted me-2"></i>
+                <small>{{ resume.phone }}</small>
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Quick Stats Badges -->
+            <div class="resume-badges mb-4">
+              {% if resume.experience and resume.experience != '[]' %}
+              <span class="info-badge badge bg-primary-subtle text-primary">
+                {{ (resume.experience|from_json)|length }} Jobs
+              </span>
+              {% endif %} {% if resume.education and resume.education != '[]' %}
+              <span class="info-badge badge bg-info-subtle text-info">
+                {{ (resume.education|from_json)|length }} Education
+              </span>
+              {% endif %} {% if resume.skills and resume.skills != '[]' %}
+              <span class="info-badge badge bg-success-subtle text-success">
+                {{ (resume.skills|from_json)|length }} Skills
+              </span>
+              {% endif %} {% if resume.projects and resume.projects != '[]' %}
+              <span class="info-badge badge bg-warning-subtle text-warning">
+                {{ (resume.projects|from_json)|length }} Projects
+              </span>
+              {% endif %}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="resume-actions">
+              <a
+                href="{{ url_for('main.view_resume', resume_id=resume.id) }}"
+                class="btn btn-primary btn-sm w-100 mb-2"
+              >
+                <i class="fas fa-eye me-2"></i>View Resume
+              </a>
+
+              <div class="action-buttons-group d-flex gap-1">
+                <button
+                  class="btn btn-outline-secondary btn-sm flex-fill"
+                  onclick="editResume({{ resume.id }})"
+                  data-bs-toggle="tooltip"
+                  title="Edit Resume"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button
+                  class="btn btn-outline-info btn-sm flex-fill"
+                  onclick="duplicateResume({{ resume.id }})"
+                  data-bs-toggle="tooltip"
+                  title="Duplicate Resume"
+                >
+                  <i class="fas fa-copy"></i>
+                </button>
+                <button
+                  class="btn btn-outline-success btn-sm flex-fill"
+                  onclick="downloadResume({{ resume.id }})"
+                  data-bs-toggle="tooltip"
+                  title="Download PDF"
+                >
+                  <i class="fas fa-download"></i>
+                </button>
+                <button
+                  class="btn btn-outline-danger btn-sm flex-fill"
+                  onclick="deleteResume({{ resume.id }}, '{{ resume.full_name }}')"
+                  data-bs-toggle="tooltip"
+                  title="Delete Resume"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Footer with Analytics -->
+          <div class="card-footer-custom p-3 bg-light">
+            <div class="d-flex justify-content-between text-muted small">
+              <span
+                ><i class="fas fa-eye me-1"></i>{{ resume.views or 0 }}
+                views</span
+              >
+              <span
+                ><i class="fas fa-download me-1"></i>{{ resume.downloads or 0 }}
+                downloads</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Empty State for Filtered Results -->
+    <div class="empty-state d-none" id="emptyFilterState">
+      <div class="text-center py-5">
+        <div class="empty-icon mb-4">
+          <i class="fas fa-search fa-4x text-muted"></i>
+        </div>
+        <h4 class="text-muted">No resumes found</h4>
+        <p class="text-muted">Try adjusting your search or filter criteria</p>
+        <button class="btn btn-outline-primary" onclick="clearFilters()">
+          <i class="fas fa-times me-2"></i>Clear Filters
+        </button>
+      </div>
+    </div>
+
+    {% else %}
+    <!-- Empty State for No Resumes -->
+    <div class="empty-state-main">
+      <div class="text-center py-5">
+        <div class="empty-illustration mb-4">
+          <div class="illustration-container">
+            <i class="fas fa-file-alt fa-5x text-primary opacity-25"></i>
+            <div class="illustration-accent"></div>
+          </div>
+        </div>
+        <h3 class="fw-bold mb-3">Ready to Create Your First Resume?</h3>
+        <p class="lead text-muted mb-4">
+          You haven't created any resumes yet. Get started with our AI-powered
+          resume builder!
+        </p>
+        <div class="cta-buttons d-flex flex-wrap justify-content-center gap-3">
+          <a
+            href="{{ url_for('main.raw_data_form') }}"
+            class="btn btn-primary btn-lg px-4 py-3 shadow-hover"
+          >
+            <i class="fas fa-plus me-2"></i>Create New Resume
+          </a>
+          <a
+            href="{{ url_for('main.upload_form') }}"
+            class="btn btn-success btn-lg px-4 py-3 shadow-hover"
+          >
+            <i class="fas fa-upload me-2"></i>Upload Existing Resume
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Enhanced Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0">
+      <div class="modal-header border-0 pb-0">
+        <div class="modal-icon text-danger">
+          <i class="fas fa-exclamation-triangle fa-2x"></i>
+        </div>
+      </div>
+      <div class="modal-body text-center px-4">
+        <h4 class="fw-bold mb-3">Delete Resume?</h4>
+        <p class="text-muted mb-4">
+          Are you sure you want to permanently delete the resume for
+          <strong id="deleteName" class="text-dark"></strong>?
+        </p>
+        <div class="alert alert-warning" role="alert">
+          <i class="fas fa-info-circle me-2"></i>
+          <strong>This action cannot be undone.</strong> All data will be
+          permanently removed.
+        </div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times me-2"></i>Cancel
+        </button>
+        <button type="button" class="btn btn-danger" id="confirmDelete">
+          <i class="fas fa-trash me-2"></i>Delete Resume
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Enhanced CSS -->
+<style>
+  .dashboard-container {
+    padding: 2rem 0;
+  }
+
+  .dashboard-header {
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.1),
+      rgba(118, 75, 162, 0.05)
+    );
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .stats-overview .stat-card {
+    border: 2px solid rgba(102, 126, 234, 0.1);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(15px);
+  }
+
+  .stats-overview .stat-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .stat-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.1),
+      rgba(118, 75, 162, 0.05)
+    );
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 1.5rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    line-height: 1;
+    margin: 0.5rem 0;
+  }
+
+  .filters-section {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .input-with-icon {
+    position: relative;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    z-index: 3;
+  }
+
+  .input-with-icon .form-control {
+    padding-left: 45px;
+  }
+
+  .resumes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+
+  .resume-card {
+    border: 2px solid rgba(102, 126, 234, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+  }
+
+  .resume-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(102, 126, 234, 0.3);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-header-custom {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 1rem;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .resume-preview-thumb {
+    width: 60px;
+    height: 75px;
+    background: white;
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .thumb-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .thumb-header {
+    height: 12px;
+    border-radius: 2px;
+    margin-bottom: 6px;
+  }
+
+  .thumb-content.template1 .thumb-header {
+    background: #007bff;
+  }
+  .thumb-content.template2 .thumb-header {
+    background: #17a2b8;
+  }
+  .thumb-content.template3 .thumb-header {
+    background: #ffc107;
+  }
+
+  .thumb-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .thumb-line {
+    height: 2px;
+    background: #dee2e6;
+    border-radius: 1px;
+  }
+
+  .thumb-line.short {
+    width: 60%;
+  }
+  .thumb-line.medium {
+    width: 80%;
+  }
+
+  .resume-status {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .resume-title {
+    color: #2d3748;
+    font-size: 1.25rem;
+  }
+
+  .resume-template {
+    font-size: 0.9rem;
+  }
+
+  .resume-meta {
+    border-top: 1px solid rgba(102, 126, 234, 0.1);
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+    padding: 0.75rem 0;
+  }
+
+  .contact-item {
+    font-size: 0.85rem;
+  }
+
+  .resume-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .info-badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 12px;
+    font-weight: 500;
+  }
+
+  .resume-actions .btn {
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .action-buttons-group .btn {
+    border-radius: 8px;
+  }
+
+  .card-footer-custom {
+    background: rgba(102, 126, 234, 0.05) !important;
+    border-top: 1px solid rgba(102, 126, 234, 0.1);
+  }
+
+  .empty-state-main {
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.05),
+      rgba(118, 75, 162, 0.02)
+    );
+    border-radius: 20px;
+    padding: 4rem 2rem;
+    margin: 2rem 0;
+  }
+
+  .illustration-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .illustration-accent {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .modal-content {
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .modal-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(220, 53, 69, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .resumes-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .dashboard-header .row {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .dashboard-header .action-buttons {
+      margin-top: 1rem;
+      justify-content: center !important;
+    }
+
+    .filters-section .row {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .stats-overview {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Animation for filtered results */
+  .resume-card-container {
+    transition: all 0.5s ease;
+  }
+
+  .resume-card-container.filtered-out {
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+  }
+
+  /* Loading states */
+  .btn-loading {
+    position: relative;
+    pointer-events: none;
+  }
+
+  .btn-loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+</style>
+{% endblock %} {% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    initializeFilters();
+    initializeTooltips();
+
+    // Animate cards on load
+    const cards = document.querySelectorAll(".resume-card");
+    cards.forEach((card, index) => {
+      card.style.animationDelay = `${index * 0.1}s`;
+      card.classList.add("fade-in-up");
+    });
+  });
+
+  function initializeFilters() {
+    const searchInput = document.getElementById("resumeSearch");
+    const templateFilter = document.getElementById("templateFilter");
+    const sortFilter = document.getElementById("sortFilter");
+
+    if (searchInput) {
+      searchInput.addEventListener("input", debounce(filterResumes, 300));
+    }
+
+    if (templateFilter) {
+      templateFilter.addEventListener("change", filterResumes);
+    }
+
+    if (sortFilter) {
+      sortFilter.addEventListener("change", sortResumes);
+    }
+  }
+
+  function filterResumes() {
+    const searchTerm =
+      document.getElementById("resumeSearch")?.value.toLowerCase() || "";
+    const templateFilter =
+      document.getElementById("templateFilter")?.value || "";
+    const cards = document.querySelectorAll(".resume-card-container");
+    const emptyState = document.getElementById("emptyFilterState");
+
+    let visibleCount = 0;
+
+    cards.forEach((card) => {
+      const name = card.dataset.name || "";
+      const template = card.dataset.template || "";
+      const cardText = card.textContent.toLowerCase();
+
+      const matchesSearch =
+        !searchTerm ||
+        name.includes(searchTerm) ||
+        cardText.includes(searchTerm);
+      const matchesTemplate = !templateFilter || template === templateFilter;
+
+      if (matchesSearch && matchesTemplate) {
+        card.classList.remove("filtered-out");
+        visibleCount++;
+      } else {
+        card.classList.add("filtered-out");
+      }
+    });
+
+    // Show/hide empty state
+    if (emptyState) {
+      if (visibleCount === 0 && cards.length > 0) {
+        emptyState.classList.remove("d-none");
+      } else {
+        emptyState.classList.add("d-none");
+      }
+    }
+  }
+
+  function sortResumes() {
+    const sortBy = document.getElementById("sortFilter")?.value;
+    const container = document.getElementById("resumesGrid");
+    const cards = Array.from(
+      container.querySelectorAll(".resume-card-container")
+    );
+
+    cards.sort((a, b) => {
+      switch (sortBy) {
+        case "newest":
+          return new Date(b.dataset.created) - new Date(a.dataset.created);
+        case "oldest":
+          return new Date(a.dataset.created) - new Date(b.dataset.created);
+        case "name":
+          return a.dataset.name.localeCompare(b.dataset.name);
+        case "updated":
+          return (
+            new Date(b.dataset.updated || b.dataset.created) -
+            new Date(a.dataset.updated || a.dataset.created)
+          );
+        default:
+          return 0;
+      }
+    });
+
+    // Reorder DOM elements
+    cards.forEach((card) => container.appendChild(card));
+  }
+
+  function clearFilters() {
+    document.getElementById("resumeSearch").value = "";
+    document.getElementById("templateFilter").value = "";
+    document.getElementById("sortFilter").value = "newest";
+    filterResumes();
+    sortResumes();
+  }
+
+  function initializeTooltips() {
+    const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltips.forEach((tooltip) => {
+      new bootstrap.Tooltip(tooltip);
+    });
+  }
+
+  // Resume action functions
+  function editResume(resumeId) {
+    showToast(
+      "Edit functionality would redirect to a form pre-filled with resume data",
+      "info"
+    );
+    // In a real app: window.location.href = `/edit-resume/${resumeId}`;
+  }
+
+  function duplicateResume(resumeId) {
+    const btn = event.target.closest("button");
+    btn.classList.add("btn-loading");
+
+    setTimeout(() => {
+      btn.classList.remove("btn-loading");
+      showToast("Resume duplicated successfully!", "success");
+      // In a real app: make API call and reload page
+    }, 2000);
+  }
+
+  function downloadResume(resumeId) {
+    const btn = event.target.closest("button");
+    btn.classList.add("btn-loading");
+
+    setTimeout(() => {
+      btn.classList.remove("btn-loading");
+      showToast("Resume downloaded successfully!", "success");
+      // In a real app: trigger actual download
+    }, 1500);
+  }
+
+  function deleteResume(resumeId, fullName) {
+    document.getElementById("deleteName").textContent = fullName;
+
+    const deleteModal = new bootstrap.Modal(
+      document.getElementById("deleteModal")
+    );
+    deleteModal.show();
+
+    document.getElementById("confirmDelete").onclick = function () {
+      const btn = this;
+      btn.classList.add("btn-loading");
+
+      // Simulate API call
+      setTimeout(() => {
+        btn.classList.remove("btn-loading");
+        deleteModal.hide();
+
+        // Remove the card with animation
+        const cardContainer = document.querySelector(
+          `[data-name*="${fullName.toLowerCase()}"]`
+        );
+        if (cardContainer) {
+          cardContainer.style.transition = "all 0.5s ease";
+          cardContainer.style.transform = "scale(0.8)";
+          cardContainer.style.opacity = "0";
+
+          setTimeout(() => {
+            cardContainer.remove();
+            showToast("Resume deleted successfully", "success");
+
+            // Check if no resumes left
+            const remainingCards = document.querySelectorAll(
+              ".resume-card-container"
+            );
+            if (remainingCards.length === 0) {
+              location.reload();
+            }
+          }, 500);
+        }
+      }, 1500);
+    };
+  }
+
+  // Utility function for debouncing
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+</script>
+{% endblock %}

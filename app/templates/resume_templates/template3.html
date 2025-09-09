@@ -1,0 +1,216 @@
+<!-- Creative Template -->
+<div class="resume-template template3" style="max-width: 850px; margin: 0 auto; font-family: 'Helvetica', sans-serif; color: #333; line-height: 1.6; background: #fafafa;">
+    
+    <div style="display: grid; grid-template-columns: 300px 1fr; min-height: 100vh;">
+        
+        <!-- Sidebar -->
+        <div class="sidebar" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; padding: 40px 30px;">
+            
+            <!-- Profile -->
+            <div class="profile text-center mb-5" style="margin-bottom: 40px;">
+                <div style="width: 120px; height: 120px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; border: 4px solid rgba(255,255,255,0.3);">
+                    <i class="fas fa-user" style="font-size: 3rem; color: rgba(255,255,255,0.8);"></i>
+                </div>
+                <h1 style="font-size: 1.8rem; margin: 0; font-weight: 700; letter-spacing: 1px;">
+                    {{ resume.full_name }}
+                </h1>
+            </div>
+
+            <!-- Contact -->
+            <div class="contact mb-5" style="margin-bottom: 40px;">
+                <h3 style="color: rgba(255,255,255,0.9); font-size: 1.2rem; margin-bottom: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Contact</h3>
+                
+                {% if resume.email %}
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <i class="fas fa-envelope" style="width: 20px; margin-right: 12px; opacity: 0.8;"></i>
+                    <span style="font-size: 0.9rem; word-break: break-word;">{{ resume.email }}</span>
+                </div>
+                {% endif %}
+                
+                {% if resume.phone %}
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <i class="fas fa-phone" style="width: 20px; margin-right: 12px; opacity: 0.8;"></i>
+                    <span style="font-size: 0.9rem;">{{ resume.phone }}</span>
+                </div>
+                {% endif %}
+                
+                {% if resume.address %}
+                <div style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+                    <i class="fas fa-map-marker-alt" style="width: 20px; margin-right: 12px; margin-top: 2px; opacity: 0.8;"></i>
+                    <span style="font-size: 0.9rem; line-height: 1.4;">{{ resume.address }}</span>
+                </div>
+                {% endif %}
+                
+                {% if resume.linkedin %}
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <i class="fab fa-linkedin" style="width: 20px; margin-right: 12px; opacity: 0.8;"></i>
+                    <a href="{{ resume.linkedin }}" style="color: white; text-decoration: none; font-size: 0.9rem; opacity: 0.9;">LinkedIn</a>
+                </div>
+                {% endif %}
+                
+                {% if resume.github %}
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <i class="fab fa-github" style="width: 20px; margin-right: 12px; opacity: 0.8;"></i>
+                    <a href="{{ resume.github }}" style="color: white; text-decoration: none; font-size: 0.9rem; opacity: 0.9;">GitHub</a>
+                </div>
+                {% endif %}
+                
+                {% if resume.website %}
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <i class="fas fa-globe" style="width: 20px; margin-right: 12px; opacity: 0.8;"></i>
+                    <a href="{{ resume.website }}" style="color: white; text-decoration: none; font-size: 0.9rem; opacity: 0.9;">Website</a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Skills -->
+            {% if resume.skills %}
+            <div class="skills mb-5" style="margin-bottom: 40px;">
+                <h3 style="color: rgba(255,255,255,0.9); font-size: 1.2rem; margin-bottom: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Skills</h3>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    {% for skill in resume.skills %}
+                        <div style="background: rgba(255,255,255,0.2); padding: 10px 15px; border-radius: 20px; text-align: center; font-size: 0.9rem; font-weight: 500; backdrop-filter: blur(10px);">
+                            {{ skill }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Languages -->
+            {% if resume.languages %}
+            <div class="languages mb-5">
+                <h3 style="color: rgba(255,255,255,0.9); font-size: 1.2rem; margin-bottom: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Languages</h3>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    {% for lang in resume.languages %}
+                        <div style="color: rgba(255,255,255,0.9); font-size: 0.9rem; padding: 5px 0;">{{ lang }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Certifications -->
+            {% if resume.certifications %}
+            <div class="certifications">
+                <h3 style="color: rgba(255,255,255,0.9); font-size: 1.2rem; margin-bottom: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Certifications</h3>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    {% for cert in resume.certifications %}
+                        <div style="color: rgba(255,255,255,0.9); font-size: 0.85rem; line-height: 1.4; padding: 3px 0;">{{ cert }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" style="padding: 40px 40px 40px 50px; background: white;">
+            
+            <!-- Professional Summary -->
+            {% if resume.summary %}
+            <div class="section mb-5" style="margin-bottom: 40px;">
+                <h2 style="color: #ff6b6b; font-size: 2rem; margin-bottom: 20px; font-weight: 600; position: relative;">
+                    About Me
+                    <div style="position: absolute; bottom: -5px; left: 0; width: 50px; height: 3px; background: linear-gradient(to right, #ff6b6b, #ee5a24); border-radius: 2px;"></div>
+                </h2>
+                <div style="background: #fff5f5; border-left: 5px solid #ff6b6b; padding: 25px; border-radius: 0 10px 10px 0; position: relative;">
+                    <p style="text-align: justify; margin: 0; font-size: 1.05rem; color: #555; line-height: 1.7;">{{ resume.summary }}</p>
+                    <div style="position: absolute; top: 20px; right: 20px; width: 30px; height: 30px; background: linear-gradient(135deg, #ff6b6b, #ee5a24); border-radius: 50%; opacity: 0.1;"></div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Experience -->
+            {% if resume.experience %}
+            <div class="section mb-5" style="margin-bottom: 40px;">
+                <h2 style="color: #ff6b6b; font-size: 2rem; margin-bottom: 30px; font-weight: 600; position: relative;">
+                    Experience
+                    <div style="position: absolute; bottom: -5px; left: 0; width: 50px; height: 3px; background: linear-gradient(to right, #ff6b6b, #ee5a24); border-radius: 2px;"></div>
+                </h2>
+                {% for exp in resume.experience %}
+                <div class="experience-item mb-4" style="margin-bottom: 35px; position: relative; padding-left: 30px;">
+                    <div style="position: absolute; left: 0; top: 8px; width: 12px; height: 12px; background: #ff6b6b; border-radius: 50%;"></div>
+                    <div style="position: absolute; left: 5px; top: 20px; width: 2px; height: calc(100% - 10px); background: linear-gradient(to bottom, #ff6b6b, transparent);"></div>
+                    
+                    <div style="background: #fafafa; padding: 25px; border-radius: 15px; box-shadow: 0 2px 15px rgba(255, 107, 107, 0.1); border: 1px solid #ffeaea;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; flex-wrap: wrap;">
+                        <h3 style="margin: 0; font-size: 1.3rem; color: #333; font-weight: 600;">{{ project.name }}</h3>
+                        {% if project.url %}
+                            <a href="{{ project.url }}" style="background: linear-gradient(135deg, #ee5a24, #ff6b6b); color: white; padding: 6px 15px; border-radius: 15px; text-decoration: none; font-size: 0.9rem; font-weight: 500; box-shadow: 0 2px 8px rgba(238, 90, 36, 0.3);">View</a>
+                        {% endif %}
+                    </div>
+                    {% if project.technologies %}
+                    <div style="margin-bottom: 12px;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            {% for tech in project.technologies.split(',') %}
+                                <span style="background: #fff5f5; color: #ff6b6b; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 500; border: 1px solid #ffeaea;">{{ tech.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if project.description %}
+                    <p style="margin: 15px 0 0 0; text-align: justify; color: #555; line-height: 1.7;">{{ project.description }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div> align-items: flex-start; margin-bottom: 15px; flex-wrap: wrap;">
+                            <div>
+                                <h3 style="margin: 0 0 8px 0; font-size: 1.4rem; color: #333; font-weight: 600;">{{ exp.position }}</h3>
+                                <h4 style="margin: 0; font-size: 1.2rem; color: #ff6b6b; font-weight: 500;">{{ exp.company }}</h4>
+                            </div>
+                            {% if exp.duration %}
+                            <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: 500; box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);">
+                                {{ exp.duration }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% if exp.description %}
+                        <p style="margin: 15px 0 0 0; text-align: justify; color: #555; font-size: 1rem; line-height: 1.7;">{{ exp.description }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Education -->
+            {% if resume.education %}
+            <div class="section mb-5" style="margin-bottom: 40px;">
+                <h2 style="color: #ff6b6b; font-size: 2rem; margin-bottom: 30px; font-weight: 600; position: relative;">
+                    Education
+                    <div style="position: absolute; bottom: -5px; left: 0; width: 50px; height: 3px; background: linear-gradient(to right, #ff6b6b, #ee5a24); border-radius: 2px;"></div>
+                </h2>
+                {% for edu in resume.education %}
+                <div class="education-item mb-4" style="background: #fafafa; padding: 25px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 15px rgba(255, 107, 107, 0.1); border: 1px solid #ffeaea;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
+                        <div>
+                            <h3 style="margin: 0 0 8px 0; font-size: 1.3rem; color: #333; font-weight: 600;">{{ edu.degree }}</h3>
+                            <h4 style="margin: 0; font-size: 1.1rem; color: #ff6b6b; font-weight: 500;">{{ edu.institution }}</h4>
+                            {% if edu.gpa %}
+                            <p style="margin: 10px 0 0 0; color: #666; font-size: 0.95rem;">GPA: {{ edu.gpa }}</p>
+                            {% endif %}
+                        </div>
+                        {% if edu.year %}
+                        <div style="background: #fff5f5; color: #ff6b6b; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: 500; border: 2px solid #ffeaea;">
+                            {{ edu.year }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Projects -->
+            {% if resume.projects %}
+            <div class="section mb-5">
+                <h2 style="color: #ff6b6b; font-size: 2rem; margin-bottom: 30px; font-weight: 600; position: relative;">
+                    Projects
+                    <div style="position: absolute; bottom: -5px; left: 0; width: 50px; height: 3px; background: linear-gradient(to right, #ff6b6b, #ee5a24); border-radius: 2px;"></div>
+                </h2>
+                {% for project in resume.projects %}
+                <div class="project-item mb-4" style="background: #fafafa; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 2px 15px rgba(255, 107, 107, 0.1); border: 1px solid #ffeaea;">
+                    <div style="display: flex; justify-content: space-between;

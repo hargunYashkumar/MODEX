@@ -1,0 +1,1371 @@
+{% extends "base.html" %} {% block title %}Create Resume - AI Resume Generator{%
+endblock %} {% block content %}
+<div class="form-container">
+  <div class="row justify-content-center">
+    <div class="col-xl-10">
+      <!-- Progress Indicator -->
+      <div class="progress-container mb-4 fade-in-up">
+        <div class="progress-header text-center mb-3">
+          <h6 class="text-muted">Resume Creation Progress</h6>
+        </div>
+        <div class="progress progress-enhanced">
+          <div
+            class="progress-bar"
+            role="progressbar"
+            style="width: 0%"
+            id="formProgress"
+          >
+            <span class="progress-text">Getting Started</span>
+          </div>
+        </div>
+        <div class="progress-steps d-flex justify-content-between mt-2">
+          <small class="text-muted step-text">Personal Info</small>
+          <small class="text-muted step-text">Experience</small>
+          <small class="text-muted step-text">Education</small>
+          <small class="text-muted step-text">Skills</small>
+          <small class="text-muted step-text">Complete</small>
+        </div>
+      </div>
+
+      <div class="main-card card shadow-lg border-0">
+        <div class="card-header text-white p-4">
+          <div class="d-flex align-items-center">
+            <div class="header-icon me-3">
+              <i class="fas fa-user-edit"></i>
+            </div>
+            <div>
+              <h2 class="mb-1 fw-bold">Create Your Professional Resume</h2>
+              <p class="mb-0 opacity-90">
+                Tell us about yourself and we'll create an amazing resume
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body p-4">
+          <form
+            method="POST"
+            action="{{ url_for('main.process_raw_data') }}"
+            id="resumeForm"
+            class="needs-validation auto-save"
+            novalidate
+          >
+            <!-- Template Selection with Enhanced Preview -->
+            <div class="form-section active" id="templateSection">
+              <div class="section-header">
+                <h4><i class="fas fa-palette me-2"></i>Choose Your Template</h4>
+                <p class="text-muted">
+                  Select a template that best represents your professional style
+                </p>
+              </div>
+
+              <div class="template-grid row g-4 mb-4">
+                <div class="col-lg-4">
+                  <div class="template-option">
+                    <input
+                      class="template-radio d-none"
+                      type="radio"
+                      name="template_id"
+                      value="template1"
+                      id="template1"
+                      checked
+                    />
+                    <label for="template1" class="template-label">
+                      <div class="template-preview shadow-hover">
+                        <div class="template-header bg-primary text-white p-3">
+                          <h6 class="mb-1 fw-bold">Professional</h6>
+                          <small class="opacity-90">Clean & Corporate</small>
+                        </div>
+                        <div class="template-body p-3">
+                          <div class="template-sample">
+                            <div class="sample-line bg-dark mb-2"></div>
+                            <div
+                              class="sample-line bg-muted mb-2"
+                              style="width: 80%"
+                            ></div>
+                            <div
+                              class="sample-line bg-muted mb-2"
+                              style="width: 60%"
+                            ></div>
+                          </div>
+                          <small class="text-muted">
+                            Perfect for corporate environments and traditional
+                            industries
+                          </small>
+                        </div>
+                        <div class="template-check">
+                          <i class="fas fa-check-circle"></i>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-lg-4">
+                  <div class="template-option">
+                    <input
+                      class="template-radio d-none"
+                      type="radio"
+                      name="template_id"
+                      value="template2"
+                      id="template2"
+                    />
+                    <label for="template2" class="template-label">
+                      <div class="template-preview shadow-hover">
+                        <div class="template-header bg-info text-white p-3">
+                          <h6 class="mb-1 fw-bold">Modern</h6>
+                          <small class="opacity-90">Contemporary & Fresh</small>
+                        </div>
+                        <div class="template-body p-3">
+                          <div class="template-sample">
+                            <div class="sample-line bg-dark mb-2"></div>
+                            <div
+                              class="sample-line bg-muted mb-2"
+                              style="width: 90%"
+                            ></div>
+                            <div
+                              class="sample-line bg-muted mb-2"
+                              style="width: 70%"
+                            ></div>
+                          </div>
+                          <small class="text-muted">
+                            Great for tech, startups, and creative industries
+                          </small>
+                        </div>
+                        <div class="template-check">
+                          <i class="fas fa-check-circle"></i>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-lg-4">
+                  <div class="template-option">
+                    <input
+                      class="template-radio d-none"
+                      type="radio"
+                      name="template_id"
+                      value="template3"
+                      id="template3"
+                    />
+                    <label for="template3" class="template-label">
+                      <div class="template-preview shadow-hover">
+                        <div class="template-header bg-warning text-dark p-3">
+                          <h6 class="mb-1 fw-bold">Creative</h6>
+                          <small class="opacity-90">Bold & Artistic</small>
+                        </div>
+                        <div class="template-body p-3">
+                          <div class="template-sample">
+                            <div class="sample-line bg-dark mb-2"></div>
+                            <div
+                              class="sample-line bg-muted mb-2"
+                              style="width: 85%"
+                            ></div>
+                            <div
+                              class="sample-line bg-muted mb-2"
+                              style="width: 75%"
+                            ></div>
+                          </div>
+                          <small class="text-muted">
+                            Ideal for design, marketing, and creative roles
+                          </small>
+                        </div>
+                        <div class="template-check">
+                          <i class="fas fa-check-circle"></i>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Personal Information Section -->
+            <div class="form-section" id="personalSection">
+              <div class="section-header">
+                <h4><i class="fas fa-user me-2"></i>Personal Information</h4>
+                <p class="text-muted">
+                  Let's start with your basic contact information
+                </p>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="full_name" class="form-label">
+                      Full Name <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-with-icon">
+                      <i class="fas fa-user input-icon"></i>
+                      <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        id="full_name"
+                        name="full_name"
+                        required
+                        placeholder="Enter your full name"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="email" class="form-label">
+                      Email Address <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-with-icon">
+                      <i class="fas fa-envelope input-icon"></i>
+                      <input
+                        type="email"
+                        class="form-control form-control-lg"
+                        id="email"
+                        name="email"
+                        required
+                        placeholder="your.email@example.com"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <div class="input-with-icon">
+                      <i class="fas fa-phone input-icon"></i>
+                      <input
+                        type="tel"
+                        class="form-control form-control-lg"
+                        id="phone"
+                        name="phone"
+                        placeholder="(555) 123-4567"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="address" class="form-label">Address</label>
+                    <div class="input-with-icon">
+                      <i class="fas fa-map-marker-alt input-icon"></i>
+                      <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        id="address"
+                        name="address"
+                        placeholder="City, State, ZIP"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label for="linkedin" class="form-label"
+                      >LinkedIn Profile</label
+                    >
+                    <div class="input-with-icon">
+                      <i class="fab fa-linkedin input-icon"></i>
+                      <input
+                        type="url"
+                        class="form-control"
+                        id="linkedin"
+                        name="linkedin"
+                        placeholder="linkedin.com/in/username"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label for="github" class="form-label"
+                      >GitHub Profile</label
+                    >
+                    <div class="input-with-icon">
+                      <i class="fab fa-github input-icon"></i>
+                      <input
+                        type="url"
+                        class="form-control"
+                        id="github"
+                        name="github"
+                        placeholder="github.com/username"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label for="website" class="form-label"
+                      >Personal Website</label
+                    >
+                    <div class="input-with-icon">
+                      <i class="fas fa-globe input-icon"></i>
+                      <input
+                        type="url"
+                        class="form-control"
+                        id="website"
+                        name="website"
+                        placeholder="yourwebsite.com"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Professional Summary Section -->
+            <div class="form-section" id="summarySection">
+              <div class="section-header">
+                <h4>
+                  <i class="fas fa-quote-left me-2"></i>Professional Summary
+                </h4>
+                <p class="text-muted">
+                  Write a compelling summary that highlights your key
+                  achievements
+                </p>
+              </div>
+
+              <div class="form-group">
+                <label for="summary" class="form-label">
+                  Professional Summary
+                  <span class="badge bg-info ms-2"
+                    >AI Suggestions Available</span
+                  >
+                </label>
+                <textarea
+                  class="form-control auto-resize"
+                  id="summary"
+                  name="summary"
+                  rows="4"
+                  maxlength="500"
+                  placeholder="Write a brief professional summary highlighting your key achievements, skills, and career objectives. This should be 2-3 sentences that grab the employer's attention..."
+                ></textarea>
+                <div class="form-text">
+                  <i class="fas fa-lightbulb text-warning me-1"></i>
+                  Tip: Focus on your unique value proposition and quantifiable
+                  achievements
+                </div>
+              </div>
+
+              <div class="ai-suggestions d-none" id="summaryAI">
+                <div class="suggestions-header">
+                  <h6><i class="fas fa-robot me-2"></i>AI Suggestions</h6>
+                </div>
+                <div class="suggestions-list">
+                  <!-- AI suggestions will be populated here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Work Experience Section -->
+            <div class="form-section" id="experienceSection">
+              <div class="section-header">
+                <h4><i class="fas fa-briefcase me-2"></i>Work Experience</h4>
+                <p class="text-muted">Add your professional work history</p>
+              </div>
+
+              <div id="experience-container">
+                <div class="experience-entry glass p-4 mb-4 rounded">
+                  <div
+                    class="entry-header d-flex justify-content-between align-items-center mb-3"
+                  >
+                    <h6 class="mb-0">
+                      <i class="fas fa-building me-2"></i>Experience #1
+                    </h6>
+                    <span class="badge bg-primary">Current</span>
+                  </div>
+
+                  <div class="row g-3">
+                    <div class="col-lg-6">
+                      <label class="form-label">Company Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="experience_company_0"
+                        placeholder="Company Name"
+                      />
+                    </div>
+                    <div class="col-lg-6">
+                      <label class="form-label">Position</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="experience_position_0"
+                        placeholder="Job Title"
+                      />
+                    </div>
+                    <div class="col-lg-6">
+                      <label class="form-label">Start Date</label>
+                      <input
+                        type="month"
+                        class="form-control"
+                        name="experience_start_0"
+                      />
+                    </div>
+                    <div class="col-lg-6">
+                      <label class="form-label">End Date</label>
+                      <div class="input-group">
+                        <input
+                          type="month"
+                          class="form-control"
+                          name="experience_end_0"
+                          id="exp_end_0"
+                        />
+                        <div class="input-group-text">
+                          <input
+                            class="form-check-input current-job"
+                            type="checkbox"
+                            id="current_0"
+                            data-target="exp_end_0"
+                          />
+                          <label class="form-check-label ms-2" for="current_0"
+                            >Current</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label"
+                        >Job Description & Achievements</label
+                      >
+                      <textarea
+                        class="form-control auto-resize"
+                        name="experience_description_0"
+                        rows="4"
+                        placeholder="• Describe your key responsibilities and achievements&#10;• Use bullet points and quantify results where possible&#10;• Focus on impact and results rather than just duties"
+                      ></textarea>
+                      <div class="form-text">
+                        <i class="fas fa-chart-line text-success me-1"></i>
+                        Pro tip: Use numbers and percentages to show your impact
+                        (e.g., "Increased sales by 25%")
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-add-section"
+                onclick="addExperience()"
+              >
+                <i class="fas fa-plus me-2"></i>Add Another Experience
+              </button>
+            </div>
+
+            <!-- Education Section -->
+            <div class="form-section" id="educationSection">
+              <div class="section-header">
+                <h4><i class="fas fa-graduation-cap me-2"></i>Education</h4>
+                <p class="text-muted">Add your educational background</p>
+              </div>
+
+              <div id="education-container">
+                <div class="education-entry glass p-4 mb-4 rounded">
+                  <div
+                    class="entry-header d-flex justify-content-between align-items-center mb-3"
+                  >
+                    <h6 class="mb-0">
+                      <i class="fas fa-university me-2"></i>Education #1
+                    </h6>
+                  </div>
+
+                  <div class="row g-3">
+                    <div class="col-lg-6">
+                      <label class="form-label">Institution</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="education_institution_0"
+                        placeholder="University Name"
+                      />
+                    </div>
+                    <div class="col-lg-6">
+                      <label class="form-label">Degree</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="education_degree_0"
+                        placeholder="Bachelor of Science in Computer Science"
+                      />
+                    </div>
+                    <div class="col-lg-6">
+                      <label class="form-label">Graduation Year</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        name="education_year_0"
+                        placeholder="2024"
+                        min="1950"
+                        max="2030"
+                      />
+                    </div>
+                    <div class="col-lg-6">
+                      <label class="form-label">GPA (Optional)</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="education_gpa_0"
+                        placeholder="3.8/4.0"
+                      />
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label"
+                        >Relevant Coursework or Achievements (Optional)</label
+                      >
+                      <textarea
+                        class="form-control"
+                        name="education_details_0"
+                        rows="2"
+                        placeholder="Relevant coursework, honors, awards, or achievements"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-add-section"
+                onclick="addEducation()"
+              >
+                <i class="fas fa-plus me-2"></i>Add Another Education
+              </button>
+            </div>
+
+            <!-- Skills Section -->
+            <div class="form-section" id="skillsSection">
+              <div class="section-header">
+                <h4><i class="fas fa-cogs me-2"></i>Skills</h4>
+                <p class="text-muted">
+                  Add your technical and professional skills
+                </p>
+              </div>
+
+              <div class="form-group">
+                <label for="skills" class="form-label">
+                  Skills
+                  <span class="badge bg-info ms-2">Smart Input</span>
+                </label>
+                <input type="hidden" id="skills" name="skills" />
+                <!-- Enhanced skills input will be created by JavaScript -->
+              </div>
+
+              <div class="skills-categories mt-4">
+                <h6>Popular Skill Categories</h6>
+                <div class="skill-suggestions">
+                  <div class="skill-category" data-category="programming">
+                    <span class="category-label">Programming</span>
+                    <div class="category-skills">
+                      <span class="skill-tag" data-skill="JavaScript"
+                        >JavaScript</span
+                      >
+                      <span class="skill-tag" data-skill="Python">Python</span>
+                      <span class="skill-tag" data-skill="Java">Java</span>
+                      <span class="skill-tag" data-skill="React">React</span>
+                      <span class="skill-tag" data-skill="Node.js"
+                        >Node.js</span
+                      >
+                    </div>
+                  </div>
+                  <div class="skill-category" data-category="design">
+                    <span class="category-label">Design</span>
+                    <div class="category-skills">
+                      <span class="skill-tag" data-skill="Adobe Photoshop"
+                        >Adobe Photoshop</span
+                      >
+                      <span class="skill-tag" data-skill="Figma">Figma</span>
+                      <span class="skill-tag" data-skill="UI/UX Design"
+                        >UI/UX Design</span
+                      >
+                      <span class="skill-tag" data-skill="Illustrator"
+                        >Illustrator</span
+                      >
+                    </div>
+                  </div>
+                  <div class="skill-category" data-category="business">
+                    <span class="category-label">Business</span>
+                    <div class="category-skills">
+                      <span class="skill-tag" data-skill="Project Management"
+                        >Project Management</span
+                      >
+                      <span class="skill-tag" data-skill="Data Analysis"
+                        >Data Analysis</span
+                      >
+                      <span class="skill-tag" data-skill="Marketing"
+                        >Marketing</span
+                      >
+                      <span class="skill-tag" data-skill="Sales">Sales</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Projects Section -->
+            <div class="form-section" id="projectsSection">
+              <div class="section-header">
+                <h4><i class="fas fa-rocket me-2"></i>Projects</h4>
+                <p class="text-muted">
+                  Showcase your best work and side projects
+                </p>
+              </div>
+
+              <div id="projects-container">
+                <div class="project-entry glass p-4 mb-4 rounded">
+                  <div
+                    class="entry-header d-flex justify-content-between align-items-center mb-3"
+                  >
+                    <h6 class="mb-0">
+                      <i class="fas fa-folder-open me-2"></i>Project #1
+                    </h6>
+                    <span class="badge bg-success">Featured</span>
+                  </div>
+
+                  <div class="row g-3">
+                    <div class="col-lg-8">
+                      <label class="form-label">Project Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="project_name_0"
+                        placeholder="Project Title"
+                      />
+                    </div>
+                    <div class="col-lg-4">
+                      <label class="form-label">Project URL (Optional)</label>
+                      <input
+                        type="url"
+                        class="form-control"
+                        name="project_url_0"
+                        placeholder="https://project-demo.com"
+                      />
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label">Technologies Used</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="project_technologies_0"
+                        placeholder="React, Node.js, MongoDB, AWS"
+                      />
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label">Project Description</label>
+                      <textarea
+                        class="form-control auto-resize"
+                        name="project_description_0"
+                        rows="3"
+                        placeholder="Describe what the project does, your role, challenges overcome, and results achieved"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-add-section"
+                onclick="addProject()"
+              >
+                <i class="fas fa-plus me-2"></i>Add Another Project
+              </button>
+            </div>
+
+            <!-- Form Navigation -->
+            <div class="form-navigation sticky-bottom">
+              <div
+                class="d-flex justify-content-between align-items-center p-3 glass rounded"
+              >
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  id="prevBtn"
+                  onclick="changeStep(-1)"
+                  style="display: none"
+                >
+                  <i class="fas fa-arrow-left me-2"></i>Previous
+                </button>
+
+                <div class="step-indicator">
+                  <span id="stepInfo">Step 1 of 6</span>
+                </div>
+
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  id="nextBtn"
+                  onclick="changeStep(1)"
+                >
+                  Next <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+
+                <button
+                  type="submit"
+                  class="btn btn-success btn-lg"
+                  id="submitBtn"
+                  style="display: none"
+                >
+                  <i class="fas fa-magic me-2"></i>Generate My Resume
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Enhanced CSS -->
+<style>
+  .form-container {
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .progress-enhanced {
+    height: 8px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .progress-bar {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    transition: width 0.6s ease;
+    position: relative;
+  }
+
+  .progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .main-card {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, #667eea, #764ba2) !important;
+  }
+
+  .header-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+
+  .form-section {
+    display: none;
+    animation: fadeInUp 0.6s ease;
+  }
+
+  .form-section.active {
+    display: block;
+  }
+
+  .template-grid .template-option {
+    position: relative;
+  }
+
+  .template-label {
+    cursor: pointer;
+    display: block;
+  }
+
+  .template-preview {
+    border: 3px solid #e9ecef;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    background: white;
+    position: relative;
+  }
+
+  .template-preview:hover {
+    transform: translateY(-5px);
+    border-color: #667eea;
+  }
+
+  .template-radio:checked + .template-label .template-preview {
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+  }
+
+  .template-check {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background: #667eea;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .template-radio:checked + .template-label .template-check {
+    opacity: 1;
+  }
+
+  .sample-line {
+    height: 8px;
+    border-radius: 4px;
+    background-color: #dee2e6;
+  }
+
+  .input-with-icon {
+    position: relative;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    z-index: 3;
+  }
+
+  .input-with-icon .form-control {
+    padding-left: 45px;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .entry-header {
+    border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+    padding-bottom: 0.5rem;
+  }
+
+  .btn-add-section {
+    border: 2px dashed #667eea;
+    background: transparent;
+    color: #667eea;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+
+  .btn-add-section:hover {
+    background: rgba(102, 126, 234, 0.1);
+    border-style: solid;
+    transform: translateY(-2px);
+  }
+
+  .skill-suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .skill-category {
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .category-label {
+    font-weight: 600;
+    color: #667eea;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .category-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .skill-tag {
+    background: white;
+    border: 1px solid #dee2e6;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .skill-tag:hover {
+    background: #667eea;
+    color: white;
+    transform: scale(1.05);
+  }
+
+  .form-navigation {
+    position: sticky;
+    bottom: 20px;
+    z-index: 100;
+    margin-top: 2rem;
+  }
+
+  .step-indicator {
+    font-weight: 600;
+    color: #667eea;
+  }
+
+  .ai-suggestions {
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.1),
+      rgba(118, 75, 162, 0.05)
+    );
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .template-grid .col-lg-4 {
+      margin-bottom: 1rem;
+    }
+
+    .form-navigation .d-flex {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-navigation .btn {
+      width: 100%;
+    }
+  }
+</style>
+{% endblock %} {% block scripts %}
+<script>
+  let currentStep = 0;
+  let totalSteps = 6;
+  let experienceCount = 1;
+  let educationCount = 1;
+  let projectCount = 1;
+
+  const sections = [
+    "templateSection",
+    "personalSection",
+    "summarySection",
+    "experienceSection",
+    "educationSection",
+    "skillsSection",
+    "projectsSection",
+  ];
+
+  const stepNames = [
+    "Choose Template",
+    "Personal Info",
+    "Summary",
+    "Experience",
+    "Education",
+    "Skills",
+    "Projects",
+  ];
+
+  document.addEventListener("DOMContentLoaded", function () {
+    updateProgress();
+    initializeSkillsInput();
+
+    // Current job checkbox handlers
+    document.addEventListener("change", function (e) {
+      if (e.target.classList.contains("current-job")) {
+        const targetInput = document.getElementById(e.target.dataset.target);
+        if (e.target.checked) {
+          targetInput.disabled = true;
+          targetInput.value = "";
+          targetInput.placeholder = "Present";
+        } else {
+          targetInput.disabled = false;
+          targetInput.placeholder = "";
+        }
+      }
+    });
+
+    // Skill tag click handlers
+    document.addEventListener("click", function (e) {
+      if (e.target.classList.contains("skill-tag")) {
+        const skill = e.target.dataset.skill;
+        addSkillFromSuggestion(skill);
+      }
+    });
+  });
+
+  function changeStep(direction) {
+    const currentSection = document.getElementById(sections[currentStep]);
+
+    if (direction === 1) {
+      // Validate current step before proceeding
+      if (!validateCurrentStep()) {
+        return;
+      }
+
+      if (currentStep < sections.length - 1) {
+        currentSection.classList.remove("active");
+        currentStep++;
+        document.getElementById(sections[currentStep]).classList.add("active");
+      }
+    } else {
+      if (currentStep > 0) {
+        currentSection.classList.remove("active");
+        currentStep--;
+        document.getElementById(sections[currentStep]).classList.add("active");
+      }
+    }
+
+    updateProgress();
+    updateNavigationButtons();
+
+    // Smooth scroll to top of form
+    document.querySelector(".main-card").scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
+
+  function validateCurrentStep() {
+    const currentSection = document.getElementById(sections[currentStep]);
+    const requiredFields = currentSection.querySelectorAll("[required]");
+    let isValid = true;
+
+    requiredFields.forEach((field) => {
+      if (!field.value.trim()) {
+        field.classList.add("is-invalid");
+        isValid = false;
+      } else {
+        field.classList.remove("is-invalid");
+      }
+    });
+
+    if (!isValid) {
+      showToast(
+        "Please fill in all required fields before continuing",
+        "warning"
+      );
+    }
+
+    return isValid;
+  }
+
+  function updateProgress() {
+    const progressBar = document.getElementById("formProgress");
+    const stepInfo = document.getElementById("stepInfo");
+    const progressText = document.querySelector(".progress-text");
+
+    const progress = ((currentStep + 1) / sections.length) * 100;
+    progressBar.style.width = progress + "%";
+    stepInfo.textContent = `Step ${currentStep + 1} of ${sections.length}`;
+    progressText.textContent = stepNames[currentStep];
+  }
+
+  function updateNavigationButtons() {
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const submitBtn = document.getElementById("submitBtn");
+
+    prevBtn.style.display = currentStep > 0 ? "inline-block" : "none";
+
+    if (currentStep === sections.length - 1) {
+      nextBtn.style.display = "none";
+      submitBtn.style.display = "inline-block";
+    } else {
+      nextBtn.style.display = "inline-block";
+      submitBtn.style.display = "none";
+    }
+  }
+
+  function addExperience() {
+    const container = document.getElementById("experience-container");
+    const newEntry = document.createElement("div");
+    newEntry.className = "experience-entry glass p-4 mb-4 rounded fade-in-up";
+    newEntry.innerHTML = `
+    <div class="entry-header d-flex justify-content-between align-items-center mb-3">
+      <h6 class="mb-0"><i class="fas fa-building me-2"></i>Experience #${
+        experienceCount + 1
+      }</h6>
+      <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeEntry(this)">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+    
+    <div class="row g-3">
+      <div class="col-lg-6">
+        <label class="form-label">Company Name</label>
+        <input type="text" class="form-control" name="experience_company_${experienceCount}" placeholder="Company Name" />
+      </div>
+      <div class="col-lg-6">
+        <label class="form-label">Position</label>
+        <input type="text" class="form-control" name="experience_position_${experienceCount}" placeholder="Job Title" />
+      </div>
+      <div class="col-lg-6">
+        <label class="form-label">Start Date</label>
+        <input type="month" class="form-control" name="experience_start_${experienceCount}" />
+      </div>
+      <div class="col-lg-6">
+        <label class="form-label">End Date</label>
+        <div class="input-group">
+          <input type="month" class="form-control" name="experience_end_${experienceCount}" id="exp_end_${experienceCount}" />
+          <div class="input-group-text">
+            <input class="form-check-input current-job" type="checkbox" id="current_${experienceCount}" data-target="exp_end_${experienceCount}">
+            <label class="form-check-label ms-2" for="current_${experienceCount}">Current</label>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Job Description & Achievements</label>
+        <textarea class="form-control auto-resize" name="experience_description_${experienceCount}" rows="4"
+                  placeholder="• Describe your key responsibilities and achievements&#10;• Use bullet points and quantify results where possible&#10;• Focus on impact and results rather than just duties"></textarea>
+      </div>
+    </div>
+  `;
+    container.appendChild(newEntry);
+    experienceCount++;
+  }
+
+  function addEducation() {
+    const container = document.getElementById("education-container");
+    const newEntry = document.createElement("div");
+    newEntry.className = "education-entry glass p-4 mb-4 rounded fade-in-up";
+    newEntry.innerHTML = `
+    <div class="entry-header d-flex justify-content-between align-items-center mb-3">
+      <h6 class="mb-0"><i class="fas fa-university me-2"></i>Education #${
+        educationCount + 1
+      }</h6>
+      <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeEntry(this)">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+    
+    <div class="row g-3">
+      <div class="col-lg-6">
+        <label class="form-label">Institution</label>
+        <input type="text" class="form-control" name="education_institution_${educationCount}" placeholder="University Name" />
+      </div>
+      <div class="col-lg-6">
+        <label class="form-label">Degree</label>
+        <input type="text" class="form-control" name="education_degree_${educationCount}" placeholder="Bachelor of Science in Computer Science" />
+      </div>
+      <div class="col-lg-6">
+        <label class="form-label">Graduation Year</label>
+        <input type="number" class="form-control" name="education_year_${educationCount}" placeholder="2024" min="1950" max="2030" />
+      </div>
+      <div class="col-lg-6">
+        <label class="form-label">GPA (Optional)</label>
+        <input type="text" class="form-control" name="education_gpa_${educationCount}" placeholder="3.8/4.0" />
+      </div>
+      <div class="col-12">
+        <label class="form-label">Relevant Coursework or Achievements (Optional)</label>
+        <textarea class="form-control" name="education_details_${educationCount}" rows="2"
+                  placeholder="Relevant coursework, honors, awards, or achievements"></textarea>
+      </div>
+    </div>
+  `;
+    container.appendChild(newEntry);
+    educationCount++;
+  }
+
+  function addProject() {
+    const container = document.getElementById("projects-container");
+    const newEntry = document.createElement("div");
+    newEntry.className = "project-entry glass p-4 mb-4 rounded fade-in-up";
+    newEntry.innerHTML = `
+    <div class="entry-header d-flex justify-content-between align-items-center mb-3">
+      <h6 class="mb-0"><i class="fas fa-folder-open me-2"></i>Project #${
+        projectCount + 1
+      }</h6>
+      <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeEntry(this)">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+    
+    <div class="row g-3">
+      <div class="col-lg-8">
+        <label class="form-label">Project Name</label>
+        <input type="text" class="form-control" name="project_name_${projectCount}" placeholder="Project Title" />
+      </div>
+      <div class="col-lg-4">
+        <label class="form-label">Project URL (Optional)</label>
+        <input type="url" class="form-control" name="project_url_${projectCount}" placeholder="https://project-demo.com" />
+      </div>
+      <div class="col-12">
+        <label class="form-label">Technologies Used</label>
+        <input type="text" class="form-control" name="project_technologies_${projectCount}" placeholder="React, Node.js, MongoDB, AWS" />
+      </div>
+      <div class="col-12">
+        <label class="form-label">Project Description</label>
+        <textarea class="form-control auto-resize" name="project_description_${projectCount}" rows="3"
+                  placeholder="Describe what the project does, your role, challenges overcome, and results achieved"></textarea>
+      </div>
+    </div>
+  `;
+    container.appendChild(newEntry);
+    projectCount++;
+  }
+
+  function removeEntry(button) {
+    const entry = button.closest(
+      ".experience-entry, .education-entry, .project-entry"
+    );
+    entry.style.animation = "fadeOut 0.3s ease";
+    setTimeout(() => entry.remove(), 300);
+  }
+
+  function initializeSkillsInput() {
+    const skillsInput = document.getElementById("skills");
+    const container = skillsInput.parentNode;
+
+    // Create skills display container
+    const skillsDisplay = document.createElement("div");
+    skillsDisplay.className =
+      "skills-display d-flex flex-wrap gap-2 mb-3 p-3 border rounded";
+    skillsDisplay.style.minHeight = "60px";
+    skillsDisplay.style.background = "rgba(255, 255, 255, 0.8)";
+
+    // Create skills input
+    const skillInput = document.createElement("input");
+    skillInput.type = "text";
+    skillInput.className = "form-control";
+    skillInput.placeholder = "Type a skill and press Enter or comma to add";
+
+    container.insertBefore(skillsDisplay, skillsInput.nextSibling);
+    container.insertBefore(skillInput, skillsInput.nextSibling);
+
+    let skills = [];
+
+    function updateSkillsDisplay() {
+      skillsDisplay.innerHTML = "";
+      if (skills.length === 0) {
+        skillsDisplay.innerHTML =
+          '<small class="text-muted align-self-center">No skills added yet. Start typing to add skills.</small>';
+      } else {
+        skills.forEach((skill, index) => {
+          const skillTag = document.createElement("span");
+          skillTag.className = "badge bg-primary skill-badge";
+          skillTag.innerHTML = `
+          ${skill}
+          <button type="button" class="btn-close btn-close-white btn-sm ms-1" 
+                  onclick="removeSkill(${index})" aria-label="Remove skill"></button>
+        `;
+          skillsDisplay.appendChild(skillTag);
+        });
+      }
+      skillsInput.value = skills.join(", ");
+    }
+
+    function addSkill(skill) {
+      skill = skill.trim();
+      if (skill && !skills.includes(skill)) {
+        skills.push(skill);
+        updateSkillsDisplay();
+        skillInput.value = "";
+      }
+    }
+
+    window.removeSkill = function (index) {
+      skills.splice(index, 1);
+      updateSkillsDisplay();
+    };
+
+    window.addSkillFromSuggestion = function (skill) {
+      addSkill(skill);
+    };
+
+    skillInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === ",") {
+        e.preventDefault();
+        addSkill(this.value);
+      }
+    });
+
+    skillInput.addEventListener("blur", function () {
+      if (this.value.trim()) {
+        addSkill(this.value);
+      }
+    });
+
+    updateSkillsDisplay();
+  }
+
+  // Enhanced form submission
+  document
+    .getElementById("resumeForm")
+    .addEventListener("submit", function (e) {
+      const submitBtn = document.getElementById("submitBtn");
+
+      // Show loading state
+      showLoadingState(submitBtn);
+
+      // Add loading overlay
+      showLoadingOverlay();
+
+      // Track completion
+      if (typeof gtag !== "undefined") {
+        gtag("event", "resume_created", {
+          event_category: "engagement",
+          event_label: "form_submission",
+        });
+      }
+    });
+
+  // CSS animations for fadeOut
+  const style = document.createElement("style");
+  style.textContent = `
+  @keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-20px); }
+  }
+  
+  .skill-badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .skill-badge .btn-close {
+    font-size: 0.7rem;
+    opacity: 0.7;
+  }
+  
+  .skill-badge .btn-close:hover {
+    opacity: 1;
+  }
+`;
+  document.head.appendChild(style);
+</script>
+{% endblock %}

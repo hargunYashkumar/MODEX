@@ -1,0 +1,14 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-WTF
+WTForms
+transformers
+torch
+PyPDF2
+python-docx
+Werkzeug
+Jinja2
+python-dotenv
+gunicorn
+pandas
